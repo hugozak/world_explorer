@@ -7,7 +7,11 @@ class PreferencesRepository {
     // Obtention de l'instance des SharedPreferences
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    final List<String> listJson = [];
+    // Récupération des pays déjà enregistrés
+    final List<String> existingJsonList = prefs.getStringList('countries') ?? [];
+
+    // Ajout des nouveaux pays à la liste existante
+    final List<String> updatedJsonList = [...existingJsonList];
 
     for (final Country country in countries) {
       // Sérialisation de l'objet company en Map<String, dynamic>
@@ -17,11 +21,11 @@ class PreferencesRepository {
       final String json = jsonEncode(mapJson);
 
       // Stockage du json dans une liste
-      listJson.add(json);
+      updatedJsonList.add(json);
     }
 
     // Sauvegarde de la liste
-    prefs.setStringList('countries', listJson);
+    prefs.setStringList('countries', updatedJsonList);
   }
 
   Future<List<Country>> loadCountries() async {
@@ -36,7 +40,7 @@ class PreferencesRepository {
       
       final Map<String, dynamic> mapCountry = jsonDecode(countryJson);
 
-      final Country country = Country.fromJson(mapCountry);
+      final Country country = Country.fromJsonClear(mapCountry);
       countries.add(country);
     }
     return countries; 

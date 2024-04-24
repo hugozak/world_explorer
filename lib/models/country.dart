@@ -26,6 +26,17 @@ class Country {
     );
   }
 
+  factory Country.fromJsonClear(Map<String, dynamic> json) {
+    return Country(
+      name: json['name'],
+      currency: json['currency'],
+      currencySymbol: json['currencySymbol'],
+      capital: json['capital'],
+      population: json['population'],
+      flagLink: json['flagLink']
+    );
+  }
+
   Map<String, dynamic> toJson(){
     return {
       'name': name,
