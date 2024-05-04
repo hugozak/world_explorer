@@ -3,7 +3,7 @@ class Country {
   String currency;
   String currencySymbol;
   String capital;
-  double population;
+  int population;
   String flagLink;
 
   Country({

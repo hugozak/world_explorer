@@ -1,50 +1,52 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:world_explorer/blocs/favorite_country_cubit.dart';
-import 'package:world_explorer/models/country.dart';
-import 'package:world_explorer/repositories/preferences_repository.dart';
+import 'package:world_explorer/models/country.dart'; // Importez le modèle de pays si vous en avez un
 
-class PaysDetail extends StatelessWidget{
-  final Country country;
+class PaysDetail extends StatelessWidget {
+  final Country country; // Utilisez le modèle de pays pour passer les données du pays
 
-  const PaysDetail({super.key, required this.country});
+  const PaysDetail({Key? key, required this.country}) : super(key: key);
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(country.name)
+        title: Text(country.name),
       ),
-      body: Center(
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Nom: ${country.name}'),
-            ElevatedButton(
-              onPressed: () => {
-               _saveCountryToFavorite(context, country) 
-              },
-              child: const Text('Ajouter aux favoris')
-            )
+            // Afficher la photo du pays
+            Container(
+              width: double.infinity,
+              height: 200.0,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: NetworkImage(country.flagLink),
+                  fit: BoxFit.cover,
+                ),
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+            ),
+            const SizedBox(height: 16.0),
+            // Afficher des informations spécifiques au pays
+            Text(
+              'Capitale: ${country.capital}',
+              style: const TextStyle(fontSize: 18.0),
+            ),
+            Text(
+              'Population: ${country.population}',
+              style: const TextStyle(fontSize: 18.0),
+            ),
+            Text(
+              'Monnaie: ${country.currency}',
+              style: const TextStyle(fontSize: 18.0),
+            ),
+            // Ajoutez d'autres informations spécifiques au pays ici
           ],
-        )
-      )
+        ),
+      ),
     );
   }
-}
-
-Future<void> _saveCountryToFavorite(BuildContext context, Country country) async {
-  final preferencesRepository = PreferencesRepository();
-  final List<Country> countries = [country];
-  await preferencesRepository.saveCountries(countries);
-
-  final countryCubit = BlocProvider.of<CountryCubit>(context);
-  countryCubit.addCountry(country);
-
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Text('${country.name} ajouté aux favoris'),
-      duration: const Duration(seconds: 2),
-    )
-  );
 }

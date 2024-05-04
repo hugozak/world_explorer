@@ -27,9 +27,12 @@ class _ListeDesPaysState extends State<ListeDesPays> {
     final listePays = query != null && query.isNotEmpty
         ? await _listeDesPaysRepository.fetchCountries(query)
         : await _listeDesPaysRepository.getAllCountries();
-    setState(() {
-      _listeDesPays = listePays;
-    });
+    
+    if(this.mounted){
+      setState(() {
+        _listeDesPays = listePays;
+      });
+    }
   }
 
   @override
@@ -91,6 +94,7 @@ Future<void> _saveCountryToFavorite(BuildContext context, Country country) async
   await preferencesRepository.saveCountries(countries);
 
   final countryCubit = BlocProvider.of<CountryCubit>(context);
+
   countryCubit.addCountry(country);
 
   ScaffoldMessenger.of(context).showSnackBar(
