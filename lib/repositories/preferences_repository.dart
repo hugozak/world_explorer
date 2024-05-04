@@ -20,8 +20,10 @@ class PreferencesRepository {
       // Transformation de la Map en String
       final String json = jsonEncode(mapJson);
 
-      // Stockage du json dans une liste
-      updatedJsonList.add(json);
+      // Si il est déjà dans la liste ne pas l'ajouter
+      if (!updatedJsonList.contains(json)) {
+        updatedJsonList.add(json);
+      }
     }
 
     // Sauvegarde de la liste
@@ -44,5 +46,18 @@ class PreferencesRepository {
       countries.add(country);
     }
     return countries; 
+  }
+
+  Future<void> removeCountry(Country country) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final List<String> countriesJson = prefs.getStringList('countries') ?? [];
+
+    countriesJson.removeWhere((json) {
+      final Country favoriteCountry = Country.fromJsonClear(jsonDecode(json));
+      return favoriteCountry.name == country.name;
+    });
+
+    await prefs.setStringList('countries', countriesJson);
   }
 }

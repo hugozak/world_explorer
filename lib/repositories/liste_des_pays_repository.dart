@@ -16,7 +16,7 @@ class CountryRepository {
         countries.add(country);
       }
       return countries;
-    } else{
+    } else {
       return [];
     }
   }

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:world_explorer/blocs/favorite_country_cubit.dart';
+import 'package:world_explorer/models/country.dart';
 import 'package:world_explorer/repositories/liste_des_pays_repository.dart';
+import 'package:world_explorer/repositories/preferences_repository.dart';
 import 'package:world_explorer/ui/screens/pays_detail.dart';
 
 class ListeDesPays extends StatefulWidget {
@@ -52,7 +56,12 @@ class _ListeDesPaysState extends State<ListeDesPays> {
                   leading: CircleAvatar(
                     backgroundImage: NetworkImage(_listeDesPays[index].flagLink),
                   ),
-                  trailing: const Icon(Icons.favorite),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.favorite),
+                    onPressed: () {
+                      _saveCountryToFavorite(context, _listeDesPays[index]);
+                    }
+                  ),
                   onTap: () {
                     Navigator.push(context, MaterialPageRoute(
                       builder: (context) => PaysDetail(country: _listeDesPays[index])
@@ -74,4 +83,20 @@ class _ListeDesPaysState extends State<ListeDesPays> {
       _chargerListeDesPays();
     }
   }
+}
+
+Future<void> _saveCountryToFavorite(BuildContext context, Country country) async {
+  final preferencesRepository = PreferencesRepository();
+  final List<Country> countries = [country];
+  await preferencesRepository.saveCountries(countries);
+
+  final countryCubit = BlocProvider.of<CountryCubit>(context);
+  countryCubit.addCountry(country);
+
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text('${country.name} ajouté aux favoris'),
+      duration: const Duration(seconds: 2),
+    )
+  );
 }

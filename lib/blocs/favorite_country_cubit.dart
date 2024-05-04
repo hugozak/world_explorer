@@ -4,7 +4,7 @@ import 'package:world_explorer/repositories/preferences_repository.dart';
 
 class CountryCubit extends Cubit<List<Country>> {
 
-  CountryCubit(this.preferencesRepository) : super([]);
+  CountryCubit(this.preferencesRepository, List<Country> initialCountries) : super(initialCountries);
 
   final PreferencesRepository preferencesRepository;
 
@@ -14,7 +14,15 @@ class CountryCubit extends Cubit<List<Country>> {
   }
 
   Future<void> addCountry(Country country) async {
-    emit([...state, country]);
-    await preferencesRepository.saveCountries(state);
+    final updatedFavorites = [...state, country];
+    emit(updatedFavorites);
+    await preferencesRepository.saveCountries(updatedFavorites);
+
+  }
+
+  Future<void> removeCountry(Country country) async {
+    final updatedFavorites = state.where((c) => c.name != country.name).toList();
+    emit(updatedFavorites);
+    await preferencesRepository.saveCountries(updatedFavorites);
   }
 }

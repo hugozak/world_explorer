@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:world_explorer/blocs/favorite_country_cubit.dart';
+import 'package:world_explorer/models/country.dart';
 import 'package:world_explorer/repositories/preferences_repository.dart';
 import 'package:world_explorer/ui/screens/pays_du_jour.dart';
 import 'package:world_explorer/ui/screens/liste_des_pays.dart';
 import 'package:world_explorer/ui/screens/mes_pays_favoris.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final preferencesRepository = PreferencesRepository();
-  final CountryCubit countryCubit = CountryCubit(preferencesRepository);
-  countryCubit.loadCountries();
 
+  final List<Country> favoriteCountries = await preferencesRepository.loadCountries();
+
+  final CountryCubit countryCubit = CountryCubit(preferencesRepository, favoriteCountries);
+  countryCubit.loadCountries();
+  
   runApp(BlocProvider<CountryCubit>(
     create: (_) => countryCubit,
     child: const MyApp()

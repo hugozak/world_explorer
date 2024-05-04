@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:world_explorer/blocs/favorite_country_cubit.dart';
 import 'package:world_explorer/models/country.dart';
 import 'package:world_explorer/repositories/preferences_repository.dart';
 
@@ -35,6 +37,10 @@ Future<void> _saveCountryToFavorite(BuildContext context, Country country) async
   final preferencesRepository = PreferencesRepository();
   final List<Country> countries = [country];
   await preferencesRepository.saveCountries(countries);
+
+  final countryCubit = BlocProvider.of<CountryCubit>(context);
+  countryCubit.addCountry(country);
+
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       content: Text('${country.name} ajouté aux favoris'),
