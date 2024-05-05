@@ -1,16 +1,27 @@
 # world_explorer
 
-A new Flutter project.
+Projet d'application mobile pour MyDigitalSchool
 
-## Getting Started
+## Fonctionnalités
 
-This project is a starting point for a Flutter application.
+Ce projet a pour but de donner des informations simples sur les pays du monde
 
-A few resources to get you started if this is your first Flutter project:
+- Page avec le pays du jour
+- Liste de tous les pays avec possibilité d'en ajouter en favoris
+- Page détail pour chaque pays
+- Page pour voir les favoris et les retirer
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Version
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Flutter : 3.16.9
+- Dart : 3.2.6
+
+Packages
+- cupertino_icons : 1.0.2
+- http : 1.2.0
+- shared_preferences : 2.2.3
+- flutter_bloc : 8.1.5
+
+## API Utilisée
+
+L'API que j'ai utilisé s'appelle [REST Countries](https://restcountries.com/), elle permet de récupérer les données des pays du monde tel que le nom, la population, la capitale, la monnaie et d'autres informations qui n'ont pas été utilisées pour mon projet
